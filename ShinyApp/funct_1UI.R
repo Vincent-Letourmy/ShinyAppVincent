@@ -12,7 +12,7 @@ function.sidebar <- function(){
                menuSubItem("DQ config", "dqconfig"),
                menuSubItem("Load DQ Files", "loaddqfiles"),
                menuSubItem("Create DQ Files","createdqfiles"),
-               menuSubItem("Remove columns","remove columns")
+               menuSubItem("Remove columns","removecolumns")
                ),
       menuItem("Naive Bayes Config",tabName = "naivebayesconfig"),
       menuItem("Costs Config", tabName = "costsconfig"),
@@ -125,14 +125,78 @@ function.body <- function(){
       
 #________________________________________________________ DataQuality Config _______________________________________________________________________________________#
         
-      tabItem(
+
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ config  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+
+     tabItem(
         tabName = "dqconfig",
         
         sidebarLayout(
           
           sidebarPanel(
             fluidPage(
-              h1("Data quality Config"),
+              h1("DQ config"),
+              tags$br(),
+              box(
+                title = "Choose a DQ option",
+                status = "primary",
+                solidHeader = TRUE,
+                width = 12,
+                tags$br(),
+                uiOutput("fromDQconfigToLoad"),
+                tags$br(),
+                uiOutput("fromDQconfigToCreate"),
+                tags$br(),
+                uiOutput("fromDQconfigToMissing"),
+                tags$br()
+              ),
+              tags$br(),
+              box(
+                title = "Why use DQ files ?",
+                status = "info",
+                solidHeader = TRUE,
+                width = 12,
+                
+                h4( "These files allow you to identify if a value is inconsistent or not*."),
+                paste("*Missing values are always identify as inconsistent.")
+              )
+            )
+            
+            
+          ),
+          
+          mainPanel(
+            
+              # tuto explicatif
+            
+            box(
+              title = "What are the DQ files ?",
+              status = "info",
+              solidHeader = TRUE,
+              width = 12,
+              
+              h3(" Types : CSV file which allows to know what is the type of each column"),
+              uiOutput("boxTypesExample"),
+              
+              tags$br(),
+              h3(" Ranges : CSV file which allows to know what are the valable values of each column"),
+              uiOutput("boxRangesExample")
+              
+            )
+          )
+        )
+      ),
+
+
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ Load Files °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+      tabItem(
+        tabName = "loaddqfiles",
+        
+        sidebarLayout(
+          
+          sidebarPanel(
+            fluidPage(
+              h1("DQ Load Files"),
               
               tabsetPanel(
                 id = "tabsetDQ",
@@ -154,24 +218,13 @@ function.body <- function(){
                     uiOutput("typesrangesButton"),
                     uiOutput("typesrangesDemo"),
                     tags$br(),
-                    uiOutput("fromLoadDQtoNextTab")
+                    uiOutput("fromRangesToNextButton")
                     
                   )
                   
-                ),
-                
-                tabPanel(
-                  title = "Columns to remove",
-                  value = "removeDQ",
-                  tags$br(),
-                  uiOutput("sliderDQ"),
-                  uiOutput("tooMuchColRemoved"),
-                  tags$br(),
-                  
-                  uiOutput("fromRangesToNextButton")
                 )
+                
               )
-              
               
             )
           ),
@@ -179,13 +232,6 @@ function.body <- function(){
             fluidPage(
               box(
                 width = 12,
-                
-                tabsetPanel(
-                  id = "tabsetMainDQ",
-                  
-                  tabPanel(
-                    title = "Types/Ranges",
-                    value = "typesranges",
                     
                     tags$br(),
                     fluidRow(valueBoxOutput("matchTypes", width = 12))
@@ -196,23 +242,71 @@ function.body <- function(){
                     ,
                     dataTableOutput("rangesFile")
                     
-                  ),
                   
-                  tabPanel(
-                    title = "Selection of columns",
-                    value = "selectcolumns",
-                    
-                    tags$br(),
-                    uiOutput("boxBarchart")
-                    
-                  )
-                )
               )
             )
           )
         )
-        ),
-  
+      ),
+
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ Create Files °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+
+      tabItem(
+        tabName = "createdqfiles",
+        
+        sidebarLayout(
+          
+          sidebarPanel(
+            
+            uiOutput("fromCreateToNext")
+            
+          ),
+          
+          mainPanel(
+            
+            
+            
+          )
+        )
+        
+        
+      ),
+
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ Remove columns  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+
+      tabItem(
+        tabName = "removecolumns",
+        
+        sidebarLayout(
+          
+          sidebarPanel(
+            fluidPage(
+              h1("DQ Remove columns"),
+              
+              tabsetPanel(
+                id = "tabsetremove",
+                
+                tabPanel(
+                  title = "Columns to remove",
+                  value = "removeDQ",
+                  tags$br(),
+                  uiOutput("sliderDQ"),
+                  uiOutput("tooMuchColRemoved"),
+                  tags$br()
+                )
+              )
+            )
+          ),
+          
+          mainPanel(
+            
+            uiOutput("boxBarchart")
+            
+          )
+        )
+        
+        
+      ),
   
   
 #__________________________________________________________ Naive Bayes Config _________________________________________________________________________________________#

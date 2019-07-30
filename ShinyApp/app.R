@@ -221,12 +221,79 @@ server <- function(input, output, session) {
     
     
     
-#_______________________________________________________ DQ Config __________________________________________________________________________________________________________________________________________#
+#_______________________________________________________ DQ Config GENERAL __________________________________________________________________________________________________________________________________________#
+    
+    
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ config  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+    
+    
+# Load BUTTON
+    
+    output$fromDQconfigToLoad <- renderUI({
+        actionButton("fromDQconfigToLoad","LOAD DQ FILES")
+    })
+    observeEvent(input$fromDQconfigToLoad, {
+        updateTabItems(session, "sidebarmenu", "loaddqfiles")
+    })
+    
+    
+# Create BUTTON
+    
+    output$fromDQconfigToCreate <- renderUI({
+        actionButton("fromDQconfigToCreate","CREATE DQ FILES")
+    })
+    observeEvent(input$fromDQconfigToCreate, {
+        updateTabItems(session, "sidebarmenu", "createdqfiles")
+    })
+    
+    
+# Missing values only BUTTON
+    
+    output$fromDQconfigToMissing <- renderUI({
+        actionButton("fromDQconfigToMissing","MISSING VALUES ONLY")
+    })
+    observeEvent(input$fromDQconfigToMissing, {
+        ##### ADD MISSING VALUES FUNCTION !!!
+        updateTabItems(session, "sidebarmenu", "removecolumns")
+    })
+    
+    
+    
+### Main panel 
+    
+# Examples
+    
+    output$typesExample <- renderDataTable(
+        function.loadFile("CSV_copie/TypesDataCopie.csv", header = TRUE, sep = ";", quote = ""),
+        options = list(scrollX = TRUE,paging = FALSE, searching = FALSE, info = FALSE)
+    )
+    output$boxTypesExample <- renderUI({
+        box(title = "Types example",
+            status = "success",
+            solidHeader = TRUE,
+            width = 12,
+            dataTableOutput("typesExample"))
+    })
+    
+    output$rangesExample <- renderDataTable(
+        function.loadFile("CSV_copie/RangesDataCopie.csv", header = TRUE, sep = ";", quote = ""),
+        options = list(scrollX = TRUE,paging = FALSE, searching = FALSE, info = FALSE)
+    )
+    output$boxRangesExample <- renderUI({
+        box(title = "Ranges example",
+            status = "success",
+            solidHeader = TRUE,
+            width = 12,
+            dataTableOutput("rangesExample"))
+    })
+    
+    
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ Load Files °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
     
     
 ### SIDE BAR PANEL
 
-# Upload Types File  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+# Upload Types File *******************************************************************************************************************************************************
     
     
     ### TYPES selection file
@@ -241,8 +308,7 @@ server <- function(input, output, session) {
     output$parametersboxTypes <- function_parametersBox("headerTypes","sepTypes","quoteTypes",TRUE)
     
     
-# Upload Ranges File  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
-    
+# Upload Ranges File *******************************************************************************************************************************************************
     
     ### RANGES selection file
     
@@ -257,7 +323,7 @@ server <- function(input, output, session) {
     
     
     
-# TYPES/RANGES upload file  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+# TYPES/RANGES upload file *******************************************************************************************************************************************************
     
     output$typesrangesButton <- renderUI({
         infileRanges <- input$fileCSVRanges
@@ -297,18 +363,57 @@ server <- function(input, output, session) {
     })
     
     
-# Next tab
     
-    output$fromLoadDQtoNextTab <- renderUI({
-        actionButton("fromLoadDQtoNextTab", "Next")
+    
+### MAIN PANEL
+    
+# Types and Ranges tables *******************************************************************************************************************************************************
+    
+    output$typesFile <- renderDataTable(
+        v$df_types,
+        options = list(scrollX = TRUE,paging = FALSE, searching = FALSE, info = FALSE)
+    )
+    
+    output$rangesFile <- renderDataTable(
+        v$df_ranges,
+        options = list(scrollX = TRUE,paging = FALSE, searching = FALSE, info = FALSE)
+    )
+    
+    
+    
+    
+# TYPES/RANGES next panel button *******************************************************************************************************************************************************
+    
+    output$fromRangesToNextButton <- renderUI({
+        if (is.null(v$df_types) || is.null(v$df_ranges)) return(NULL)
+        actionButton("fromRangesToNextButton","Next")
     })
-    observeEvent(input$fromLoadDQtoNextTab, {
+    observeEvent(input$fromRangesToNextButton,{
+        
         # Matrix boolean Consistencies values
         v$matrixBool <- function.matrixBooleanConsistency(v$dataframe_initialisation, v$df_types, v$df_ranges)
-        updateTabsetPanel(session, "tabsetDQ", "removeDQ")
-        updateTabsetPanel(session, "tabsetMainDQ", "selectcolumns")
+        
+        updateTabItems(session, "sidebarmenu", "removecolumns")
     })
     
+    
+    
+    
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ Create Files °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+
+    
+# NEXT BUTTON
+    
+    output$fromCreateToNext <- renderUI({
+        actionButton("fromCreateToNext","NEXT")
+    })
+    observeEvent(input$fromCreateToNext, {
+        updateTabItems(session, "sidebarmenu", "removecolumns")
+    })
+    
+    
+    
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ Remove columns  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
     
     
 # Slider DQ
@@ -323,19 +428,28 @@ server <- function(input, output, session) {
     })
     
     
-### MAIN PANEL
+# Check if too much columns are removed
     
-# Types and Ranges tables  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+    output$tooMuchColRemoved <- renderUI({
+        if (is.null(v$dataframe_initialisation) || is.null(v$tabColumnToRemove)) return(NULL)
+        valueBoxOutput("valueBoxColRemoved", width = 12)
+    })
     
-    output$typesFile <- renderDataTable(
-        v$df_types,
-        options = list(scrollX = TRUE,paging = FALSE, searching = FALSE, info = FALSE)
-    )
+    output$valueBoxColRemoved <- renderValueBox({
+        colTotal <- ncol(v$dataframe_initialisation)
+        colRemoved <- length(v$tabColumnToRemove)
+        value <- paste(colRemoved, "/",colTotal)
+        
+        if (colTotal - colRemoved < 2) {
+            v$tooMuchColRemoved <- TRUE
+            valueBox(value = value, subtitle = paste("Too much columns removed"), icon = icon("thumbs-down",lib='font-awesome'), color = "red")
+        }
+        else {
+            v$tooMuchColRemoved <- FALSE
+            valueBox(value = value, subtitle = paste("Columns which will be removed"), icon = icon("thumbs-up",lib='font-awesome'), color = "green")
+        }
+    })
     
-    output$rangesFile <- renderDataTable(
-        v$df_ranges,
-        options = list(scrollX = TRUE,paging = FALSE, searching = FALSE, info = FALSE)
-    )
     
     
 # Bar chart remove columns
@@ -378,40 +492,6 @@ server <- function(input, output, session) {
     })
     
     
-# Check if too much columns are removed
-    
-    output$tooMuchColRemoved <- renderUI({
-        if (is.null(v$dataframe_initialisation) || is.null(v$tabColumnToRemove)) return(NULL)
-        valueBoxOutput("valueBoxColRemoved", width = 12)
-    })
-    
-    output$valueBoxColRemoved <- renderValueBox({
-        colTotal <- ncol(v$dataframe_initialisation)
-        colRemoved <- length(v$tabColumnToRemove)
-        value <- paste(colRemoved, "/",colTotal)
-        
-        if (colTotal - colRemoved < 2) {
-            v$tooMuchColRemoved <- TRUE
-            valueBox(value = value, subtitle = paste("Too much columns removed"), icon = icon("thumbs-down",lib='font-awesome'), color = "red")
-        }
-        else {
-            v$tooMuchColRemoved <- FALSE
-            valueBox(value = value, subtitle = paste("Columns which will be removed"), icon = icon("thumbs-up",lib='font-awesome'), color = "green")
-        }
-    })
-    
-    
-    
-# TYPES/RANGES next panel button  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
-    
-    output$fromRangesToNextButton <- renderUI({
-        if (is.null(v$df_types) || is.null(v$df_ranges)) return(NULL)
-        actionButton("fromRangesToNextButton","Next")
-    })
-    observeEvent(input$fromRangesToNextButton,{  
-        if (v$tooMuchColRemoved) return(NULL)
-        updateTabItems(session, "sidebarmenu", "naivebayesconfig")
-    })
     
     
 #________________________________________________________ Naive Bayes Config _________________________________________________________________________________________________________________________________________#
