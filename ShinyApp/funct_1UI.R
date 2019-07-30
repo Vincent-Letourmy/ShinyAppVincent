@@ -8,7 +8,12 @@ function.sidebar <- function(){
     sidebarMenu(
       id = "sidebarmenu",
       menuItem("Initialisation", tabName = "initialisation"),
-      menuItem("Data Quality Config", tabName = "dqconfig"),
+      menuItem("Data Quality Config", tabName = "DQgeneral", startExpanded = TRUE,
+               menuSubItem("DQ config", "dqconfig"),
+               menuSubItem("Load DQ Files", "loaddqfiles"),
+               menuSubItem("Create DQ Files","createdqfiles"),
+               menuSubItem("Remove columns","remove columns")
+               ),
       menuItem("Naive Bayes Config",tabName = "naivebayesconfig"),
       menuItem("Costs Config", tabName = "costsconfig"),
       menuItem("Results", tabName = "results"),

@@ -5,7 +5,6 @@ library(caret)
 library(dplyr)
 library(plotly) # Plots
 library(rhandsontable) # Edit table
-library(pROC) # Accuracy, sensibility and specificity
 library(shinycssloaders)
 
 source("funct_0downloadFile.R")
@@ -19,7 +18,7 @@ source("funct_loopResults.R")
 #source("funct_other.R")
 
 
-ui <- dashboardPage(title = 'Costs test - Week 7', function.header(), function.sidebar(), function.body(), skin='red')
+ui <- dashboardPage(title = 'ShinyAppVincent', function.header(), function.sidebar(), function.body(), skin='blue')
 
 
 server <- function(input, output, session) {
