@@ -1,11 +1,11 @@
 Age;Color;First beer;Pregnancies;Smokes
-30;Red;18;Zero;FALSE
+30;Red;-19;Zero;FALSE
 34;Blue;;Zero;FALSE
 30;Green;15;Zero;TRUE
-24;Blue;14;Zero;FALSE
+200;TREZAZZ;14;YYTTREZ;ZERTGFDS
 67;Green;;Zero;FALSE
 31;Red;;One;TRUE
-35;Green;18;Three;FALSE
+35;;18;Three;FALSE
 31;Green;19;GUI;FALSE
 ;Red;16;Three;FALSE
 ;Red;18;Zero;FALSE

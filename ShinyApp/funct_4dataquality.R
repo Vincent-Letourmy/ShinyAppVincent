@@ -18,7 +18,7 @@ function.barChartInconsistency <- function(matrixBool){
 
 ### 0/1 file inconsistency
 
-function.matrixBooleanConsistency <- function(df,types,ranges){
+function.matrixBooleanConsistencyBIS <- function(df,types,ranges){
   
   n1 <- nrow(df)
   n2 <- ncol(df)
@@ -103,10 +103,67 @@ function.matching <- function(df1, df2, nameFile){
 }
 
 
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
 
+### 0/1 file missing values only
+
+function.matrixBooleanMissingValues <- function(df){
+  bool <- df == ""
+  bool <- ifelse(is.na(bool), TRUE, bool)
+  return(as.data.frame(bool))
+}
 
 
+### 0/1 file inconsistency BIS
+
+function.matrixBooleanConsistency <- function(df,types,ranges){
+  
+  n1 <- nrow(df)
+  n2 <- ncol(df)
+  a <- data.frame(matrix (rep(0, n1*n2), n1, n2))
+  names(a) <- names(df)
+  rownames(a) <- rownames(df)
+  
+  for (col in names(df)) {
+    typ <- types[,col]
+    
+    if (typ == "string"){
+      column <- df[,col] <- as.character(df[,col])
+      rang <- ranges[,col]
+      
+      bool <- column == ""
+      bool <- ifelse(is.na(bool) , TRUE, bool)
+      bool2 <- !column %in% rang
+      res <- bool + bool2
+      res <- ifelse(res > 1, 1, res)
+
+      a[,col] <- res 
+      
+      
+    }
+    else if (typ == "numeric" || typ == "integer") {
+      column <- as.character(df[,col])
+      column <- df[,col] <- as.numeric(column)
+      rangMin <- ranges[1,col]
+      rangMax <- ranges[2,col]
+      
+      bool <- column == ""
+      bool <- ifelse(is.na(bool) , TRUE, bool)
+      bool2 <- column > rangMax
+      bool2 <- ifelse(is.na(bool2) , FALSE, bool2)
+      bool3 <- column < rangMin
+      bool3 <- ifelse(is.na(bool3) , FALSE, bool3)
+    
+      res <- bool + bool2 + bool3
+      res <- ifelse(res > 1, 1, res)
+      
+      a[,col] <- res 
+    }
+    
+  }
+  return(a)
+}
 
 
 
