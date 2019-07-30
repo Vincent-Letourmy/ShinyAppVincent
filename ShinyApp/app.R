@@ -253,7 +253,7 @@ server <- function(input, output, session) {
         actionButton("fromDQconfigToMissing","MISSING VALUES ONLY")
     })
     observeEvent(input$fromDQconfigToMissing, {
-        ##### ADD MISSING VALUES FUNCTION !!!
+        v$matrixBool <- function.matrixBooleanMissingValues(v$dataframe_initialisation)
         updateTabItems(session, "sidebarmenu", "removecolumns")
     })
     
