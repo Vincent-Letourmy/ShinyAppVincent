@@ -85,37 +85,38 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
   l <- "DQ"
   n <- 0
   row <- paste(l,n)
+  progress <- 1/length(nomCol)
+  withProgress(message = "Calculating ...", detail = "Don't worry :)", value = 0, {
+    
+    for (col in nomCol) {
+      n <- n + 1
+      incProgress(progress) # Progress bar
+      row = paste(l,n)
+      
+      df <- df[,!names(df)%in%col]
+      matrix <- matrix[,!names(matrix)%in%col]
+      
+      rowRemove <- function.removeConsistency(df,matrix)
+      dfClean <- df[!row.names(df)%in%rowRemove , ]
+      
+      res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
+      
+      div <- nrow(dfClean)
+      
+      tabRes <- function.tabRes(tabRes, row, 
+                                col,
+                                tabCol[col],
+                                ncol(dfClean),
+                                div,
+                                res,
+                                tabCosts,
+                                NULL
+      )
+      
+    }
+    
+  })
   
- 
-  
-  for (col in nomCol) {
-    
-    n <- n + 1
-    row = paste(l,n)
-    
-    df <- df[,!names(df)%in%col]
-    matrix <- matrix[,!names(matrix)%in%col]
-    
-    rowRemove <- function.removeConsistency(df,matrix)
-    dfClean <- df[!row.names(df)%in%rowRemove , ]
-    
-    res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
-    
-    div <- nrow(dfClean)
-    
-    tabRes <- function.tabRes(tabRes, row, 
-                              col,
-                              tabCol[col],
-                              ncol(dfClean),
-                              div,
-                              res,
-                              tabCosts,
-                              NULL
-    )
-    
-    
-    
-  }
   
   return(tabRes)
   
@@ -124,25 +125,26 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
 
 
 
+function.outputLineChart <- function(tab,colName,y){
+  renderPlotly({
+    x <- rownames(tab)
+    plot_ly(
+      tab,x = factor(x,levels = x), y = ~tab[,colName], type = "scatter", mode = "lines"
+    ) %>% 
+      layout(xaxis = list(title = "Step"),
+             yaxis = list(title = y))
+  })
+}
 
 
-
-function.resLineChart <- function(title, status, tab, colName, y){
+function.resLineChart <- function(title, status, output){
   
   renderUI({
     box(title = title,
         status = status,
         solidHeader = TRUE,
         width = 6,
-        
-        renderPlotly({
-          x <- rownames(tab)
-          plot_ly(
-            tab,x = factor(x,levels = x), y = ~tab[,colName], type = "scatter", mode = "lines"
-          ) %>% 
-            layout(xaxis = list(title = "Step"),
-                   yaxis = list(title = y))
-        })
+        withSpinner(plotlyOutput(output))
         
     )
   })
