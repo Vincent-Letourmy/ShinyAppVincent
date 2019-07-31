@@ -22,45 +22,49 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
   nbRowTabCosts <- nrow(tabCosts)
   rangesFirst <- ranges[,col][1] # ATTENTION, le premier élément dans ranges pour les booléens doit être FALSE, 0, non ... La négation
   
-  
-  for (i in 1:fold) {
-    
-    # Train and test partition
-    training.samples <- df[,col] %>% 
-      caret::createDataPartition(p = 0.8, list = FALSE)
-    train.data <- df[training.samples, ]
-    test.data <- df[-training.samples, ]
-    Reality <- test.data[,col]
-    
-    # Naive Bayes prediction
-    Naive_Bayes_Model=naiveBayes(train.data[,col] ~., data = train.data)
-    NB_Predictions=predict(Naive_Bayes_Model,test.data[,!names(test.data)%in%col])
-    res <- data.frame(table(NB_Predictions,Reality))
-    
-    if (nbRowTabCosts == 4){
-      stat <- funct.eval_metrics_binomial(res$Freq)
+  withProgress( message = "Naive Bayes ...", value = 0, {
+    incProgress()
+    for (i in 1:fold) {
       
-      resultats$sensitivity[i] <- stat$sensitivity*100
-      resultats$specificity[i] <- stat$specificity*100
-      resultats$moy[i] <- stat$accuracy*100
+      # Train and test partition
+      training.samples <- df[,col] %>% 
+        caret::createDataPartition(p = 0.8, list = FALSE)
+      train.data <- df[training.samples, ]
+      test.data <- df[-training.samples, ]
+      Reality <- test.data[,col]
       
-    }
-    else{
-      # Create mean
-      aux <- 0
-      for(j in row.names(res)){
-        if (as.integer(res[j,c("NB_Predictions")]) == as.integer(res[j,c("Reality")])) {
-          aux[j] = res[j,c("Freq")]
-        }
+      # Naive Bayes prediction
+      Naive_Bayes_Model=naiveBayes(train.data[,col] ~., data = train.data)
+      NB_Predictions=predict(Naive_Bayes_Model,test.data[,!names(test.data)%in%col])
+      res <- data.frame(table(NB_Predictions,Reality))
+      
+      if (nbRowTabCosts == 4){
+        stat <- funct.eval_metrics_binomial(res$Freq)
+        
+        resultats$sensitivity[i] <- stat$sensitivity*100
+        resultats$specificity[i] <- stat$specificity*100
+        resultats$moy[i] <- stat$accuracy*100
+        
       }
-      aux <- as.data.frame(aux)
-      resultats$moy[i]<- sum(aux)/sum(res$Freq)*100
-    }
-    
-    # Create frequences tab
+      else{
+        # Create mean
+        aux <- 0
+        for(j in row.names(res)){
+          if (as.integer(res[j,c("NB_Predictions")]) == as.integer(res[j,c("Reality")])) {
+            aux[j] = res[j,c("Freq")]
+          }
+        }
+        aux <- as.data.frame(aux)
+        resultats$moy[i]<- sum(aux)/sum(res$Freq)*100
+      }
+      
+      # Create frequences tab
       resultats$restab[,"cost"] <- ( resultats$restab[,"cost"] + res[,"Freq"] ) 
-
-  }
+      
+      incProgress(1/fold)
+    }
+  })
+  
   
   # Frequences tab retraité en fonction du fold
     resultats$restab[,"cost"] <- resultats$restab[,"cost"] / fold
