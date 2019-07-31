@@ -80,7 +80,10 @@ function.matrixBooleanConsistency <- function(df,types,ranges){
 function.removeConsistency <- function(df, a){
   rem <- 0
   for (row in row.names(a)) {
-    if (1 %in% a[row,]) rem[row] = row
+    ligne <- as.numeric(a[row,])
+    if (1 %in% ligne) {
+      rem[row] = row
+    }
   }
   return(rem[-1])
 }
