@@ -74,10 +74,15 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
 # Costs tab from NB
 
 function.tabNaiveBayes <- function(df, colName){
-  Naive_Bayes_Model=e1071::naiveBayes(df[,colName] ~., data = df)
-  NB_Predictions=predict(Naive_Bayes_Model,df)
-
-  tab <- data.frame(table(NB_Predictions,df[,colName]))
+  col <- df[,colName]
+  otherCol <- names(df)[1]
+  dfRed <- df[,c(otherCol,colName)]
+  print("1")
+  Naive_Bayes_Model=e1071::naiveBayes(col ~., data = dfRed)
+  print("2")
+  NB_Predictions=predict(Naive_Bayes_Model,dfRed)
+  print("3")
+  tab <- data.frame(table(NB_Predictions,col))
   tab <- data.frame(Prediction = tab[,1], Reality = tab[,2])
 
   cost <- 0
