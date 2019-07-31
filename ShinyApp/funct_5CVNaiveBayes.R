@@ -19,7 +19,7 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
   resultats <- list()
   cost <- 0
   resultats$restab <- data.frame(tabCosts[,-3],cost)
-  
+  nbRowTabCosts <- nrow(tabCosts)
   rangesFirst <- ranges[,col][1] # ATTENTION, le premier élément dans ranges pour les booléens doit être FALSE, 0, non ... La négation
   
   
@@ -37,7 +37,7 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
     NB_Predictions=predict(Naive_Bayes_Model,test.data[,!names(test.data)%in%col])
     res <- data.frame(table(NB_Predictions,Reality))
     
-    if (nrow(tabCosts) == 4){
+    if (nbRowTabCosts == 4){
       stat <- funct.eval_metrics_binomial(res$Freq)
       
       resultats$sensitivity[i] <- stat$sensitivity*100
@@ -58,16 +58,13 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
     }
     
     # Create frequences tab
-    for (row in row.names(tabCosts)) {
-      resultats$restab[row,"cost"] <- ( resultats$restab[row,"cost"] + res[row,"Freq"] ) 
-    }
-    
+      resultats$restab[,"cost"] <- ( resultats$restab[,"cost"] + res[,"Freq"] ) 
+
   }
   
   # Frequences tab retraité en fonction du fold
-  for (row in row.names(tabCosts)) {
-    resultats$restab[row,"cost"] <- resultats$restab[row,"cost"] / fold
-  }
+    resultats$restab[,"cost"] <- resultats$restab[,"cost"] / fold
+  
   
   return(resultats)
   

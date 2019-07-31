@@ -1,64 +1,32 @@
-library(plotly)
 
 source("ShinyApp/funct_4dataquality.R")
 source("ShinyApp/funct_5CVNaiveBayes.R")
 
-df <- read.csv("ShinyApp/CSV/risk_factors_cervical_cancer_Original.csv", header = TRUE, sep = ",")
+#df <- read.csv2("ShinyApp/CSV_copie/RangesDataCopie.csv", header = TRUE, sep = ";", quote = "")
 
-  for (col in names(df )) {
-    column <- as.character(df[,col])
-    df[,col] <-  ifelse(column == "?", "", column)
-  }
+df <- read.csv2("ShinyApp/CSV/risk_factors_cervical_cancer_Original.csv", header = TRUE, sep = ",", quote = "")
+types <- read.csv2("ShinyApp/CSV/TypesDataOriginal.csv", header = TRUE, sep = ";", quote = "")
+ranges <- read.csv2("ShinyApp/CSV/RangesDataOriginal.csv", header = TRUE, sep = ";", quote = "")
+
+nouv <- data.frame(A = c(1,2,3),
+                   B = c(4,5,6),
+                   C = c(7,8,9))
+nouv
+nouv[,"C"] <- nouv[,"A"] + nouv[,"B"]
+nouv
+
+library(pROC)
+
+real <- c(1,0,1,0,1)
+pred <- c(0,0,0,0,0)
+
+res <- accuracy(real,pred)
+res <- auc(real,pred)
+res
 
 df <- function.as_factor(df)
 
-#dfPerfect <- read.csv("ShinyApp/CSV_NoProblem/MyDataDQ.csv", header = TRUE, sep = ",")
-#dfPerfect <- function.as_factor(dfPerfect)
-
-types <- read.csv("ShinyApp/CSV/TypesDataOriginal.csv", header = TRUE, sep = ";")
-ranges <- read.csv("ShinyApp/CSV/RangesDataOriginal.csv", header = TRUE, sep = ";")
-matrix <- function.matrixBooleanConsistency(df,types,ranges)
-
-target <- "Hinselmann"
-otherTargets <- c("Citology","Schiller","Biopsy")
-df <- df[,!names(df)%in%otherTargets]
-#dfPerfect <- dfPerfect[,!names(dfPerfect)%in%otherTargets]
-matrix <- matrix[,!names(matrix)%in%otherTargets]
-
-dfNa <- function.barChartInconsistency(matrix)
-res <- sort(dfNa, decreasing = TRUE)
-# dfNa trié OK
-minimum <- names(which(res > 20))  # Mettre le résulat du slider min
-maximum <- names(which(res < 100)) # Mettre le résulat du slider max
-
-nomCol <- intersect(minimum,maximum)
-res <- res[nomCol]
-
-tabCosts <- function.tabNaiveBayes(df,target)
-tabCosts[2,"Cost"] <- 50
-tabCosts[3,"Cost"] <- 100
-
-source("ShinyApp/funct_loopResults.R")
-
-res <- function.loopResultsDQ(df,matrix,tabCosts,target,ranges,10,res)
+tabcosts <- function.tabNaiveBayes(df,"Biopsy")
+tabcosts
+res <- function.CVNaiveBayes(df,"Biopsy",tabcosts,30,ranges)
 res
-
-res[, c("Accuracy (%)", "Sensitivity (%)","Specificity (%)","Cost (per patient)")]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

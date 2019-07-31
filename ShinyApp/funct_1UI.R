@@ -294,7 +294,8 @@ function.body <- function(){
                   uiOutput("tooMuchColRemoved"),
                   tags$br()
                 )
-              )
+              ),
+              uiOutput("fromDQToNextButton")
             )
           ),
           
@@ -408,14 +409,15 @@ function.body <- function(){
       tabItem(
         tabName = "results",
         fluidPage(
-          uiOutput("boxresInitial"),
-          uiOutput("boxresDQ"),
-          uiOutput("boxresFixed"),
-          tags$br(),
           uiOutput("boxPlotCost"),
           uiOutput("boxPlotAccuracy"),
           uiOutput("boxPlotSensitivity"),
-          uiOutput("boxPlotSpecificity")
+          uiOutput("boxPlotSpecificity"),
+          tags$br(),
+          uiOutput("boxresInitial"),
+          uiOutput("boxresDQ"),
+          uiOutput("boxresFixed")
+          
         )
       )
     )

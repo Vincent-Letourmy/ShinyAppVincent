@@ -492,6 +492,18 @@ server <- function(input, output, session) {
     })
     
     
+# DQ next panel button  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+    
+    output$fromDQToNextButton <- renderUI({
+        actionButton("fromDQToNextButton","Next")
+    })
+    observeEvent(input$fromDQToNextButton,{  
+        if (v$tooMuchColRemoved) return(NULL)
+        updateTabItems(session, "sidebarmenu", "naivebayesconfig")
+    })
+    
+    
+    
     
     
 #________________________________________________________ Naive Bayes Config _________________________________________________________________________________________________________________________________________#
