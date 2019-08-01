@@ -22,8 +22,8 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
   nbRowTabCosts <- nrow(tabCosts)
   rangesFirst <- ranges[,col][1] # ATTENTION, le premier élément dans ranges pour les booléens doit être FALSE, 0, non ... La négation
   
-  withProgress( message = "Naive Bayes ...", value = 0, {
-    incProgress()
+  withProgress( message = "Naive Bayes prediction ...", value = 0, {
+    
     for (i in 1:fold) {
       
       # Train and test partition
@@ -81,11 +81,8 @@ function.tabNaiveBayes <- function(df, colName){
   col <- df[,colName]
   otherCol <- names(df)[1]
   dfRed <- df[,c(otherCol,colName)]
-  print("1")
   Naive_Bayes_Model=e1071::naiveBayes(col ~., data = dfRed)
-  print("2")
   NB_Predictions=predict(Naive_Bayes_Model,dfRed)
-  print("3")
   tab <- data.frame(table(NB_Predictions,col))
   tab <- data.frame(Prediction = tab[,1], Reality = tab[,2])
 

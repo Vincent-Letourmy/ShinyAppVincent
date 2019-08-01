@@ -86,7 +86,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
   n <- 0
   row <- paste(l,n)
   progress <- 1/length(nomCol)
-  withProgress(message = "Calculating ...", detail = "Don't worry :)", value = 0, {
+  withProgress(message = "Progressing ...", detail = "Don't worry :)", value = 0, {
     
     for (col in nomCol) {
       n <- n + 1
