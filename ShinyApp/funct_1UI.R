@@ -51,6 +51,7 @@ function.body <- function(){
                         column(6, uiOutput("uploadbutton")),
                         column(6, uiOutput("demobutton"))
                       ),
+                      uiOutput("split"),
                       tags$br()
                   )
                 ),

@@ -31,56 +31,62 @@ function.tabRes <- function(tabRes, row,colRemoved, badValues, nbcol, nbrow, res
 
 
 function.uniqueResults <- function(name, df, tabCosts, target, ranges, fold, costFixing){
-  tabRes <- data.frame()
-  row <- name
   
-  res <- function.CVNaiveBayes(df,target,tabCosts,fold,ranges)
-  div <- nrow(df)
-  
-  
-  tabRes <- function.tabRes(tabRes, row, 
-                            NULL,
-                            NULL,
-                            ncol(df),
-                            div,
-                            res,
-                            tabCosts,
-                            costFixing
-  )
-  
-  
-  
-  return(tabRes)
+  withProgress(message = "Initial DB ...", detail = "Don't worry :)", value = 0, {
+    
+    tabRes <- data.frame()
+    row <- name
+    
+    res <- function.CVNaiveBayes(df,target,tabCosts,fold,ranges)
+    div <- nrow(df)
+    incProgress(0.5)
+    
+    tabRes <- function.tabRes(tabRes, row, 
+                              NULL,
+                              NULL,
+                              ncol(df),
+                              div,
+                              res,
+                              tabCosts,
+                              costFixing
+    )
+    incProgress(0.5)
+    return(tabRes)
+    
+  })
 }
 
 
 
 function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, tabCol){
   
-  tabRes <- data.frame()
-  nomCol <- names(tabCol)
+  withProgress(message = "Progressing ...", detail = "Don't worry :)", value = 0, {
+    
+    tabRes <- data.frame()
+    nomCol <- names(tabCol)
+    
+    row <- "Data Quality 0"
+    
+    # DQ with all columns
+    
+    rowRemove <- function.removeConsistency(df,matrix)
+    dfClean <- df[!row.names(df)%in%rowRemove , ]
+    
+    res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
+    
+    div <- nrow(dfClean)
+    
+    tabRes <- function.tabRes(tabRes, row, 
+                              "",
+                              "",
+                              ncol(dfClean),
+                              div,
+                              res,
+                              tabCosts,
+                              NULL
+    )
   
-  row <- "Data Quality 0"
-  
-  # DQ with all columns
-  
-  rowRemove <- function.removeConsistency(df,matrix)
-  dfClean <- df[!row.names(df)%in%rowRemove , ]
-  
-  res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
-  
-  div <- nrow(dfClean)
-  
-  tabRes <- function.tabRes(tabRes, row, 
-                            "",
-                            "",
-                            ncol(dfClean),
-                            div,
-                            res,
-                            tabCosts,
-                            NULL
-  )
-  
+  })
   
   l <- "DQ"
   n <- 0
