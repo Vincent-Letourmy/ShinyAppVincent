@@ -74,6 +74,11 @@ server <- function(input, output, session) {
         actionButton("fromLoadToNextTab", "Next")
     })
     observeEvent(input$fromLoadToNextTab, {
+        
+        training.samples <- v$dataframe_initialisation[,1] %>% 
+            caret::createDataPartition(p = 0.1, list = FALSE)
+        v$dataframe_initialisation <- v$dataframe_initialisation[training.samples, ]
+        
         updateTabsetPanel(session, "tabsetInitialisation", "defineNas")
     })
     
@@ -661,10 +666,6 @@ server <- function(input, output, session) {
         #v$df_types <- v$df_types[,names(v$dataframe_initialisation)]
         #v$df_ranges <- v$df_ranges[,names(v$dataframe_initialisation)]
         v$matrixBool <- v$matrixBool[,names(v$dataframe_initialisation)]
-        
-        training.samples <- v$dataframe_initialisation[,col] %>% 
-            caret::createDataPartition(p = 0.1, list = FALSE)
-        v$dataframe_initialisation <- v$dataframe_initialisation[training.samples, ]
         
         updateTabItems(session,"sidebarmenu", "results")
     })
