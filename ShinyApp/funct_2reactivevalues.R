@@ -21,6 +21,7 @@ function_reactiveValues <- function() {
                  
                  # Results
                  resInitial = NULL,
+                 resDQOnlyCol = NULL,
                  resDQ = NULL,
                  resFixed = NULL,
                  resultsTab = NULL

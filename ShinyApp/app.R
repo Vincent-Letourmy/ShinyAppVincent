@@ -67,7 +67,7 @@ server <- function(input, output, session) {
     })
     
     output$split <- renderUI({
-        numericInput("split","Split : % of DB", value = 10,min = 0,max = 100, step = 1)
+        numericInput("split","Split the table ? (%)", value = 100,min = 0,max = 100, step = 1)
         
     })
     
@@ -82,7 +82,7 @@ server <- function(input, output, session) {
         
         training.samples <- v$dataframe_initialisation[,1] %>% 
             caret::createDataPartition(p = input$split/100, list = FALSE)
-        v$dataframe_initialisation <- v$dataframe_initialisation[training.samples, ]
+        v$dataframe_initialisationBis <- v$dataframe_initialisation <- v$dataframe_initialisation[training.samples, ]
         
         updateTabsetPanel(session, "tabsetInitialisation", "defineNas")
     })
@@ -683,29 +683,24 @@ server <- function(input, output, session) {
     
 # LOOP °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
     
-    output$resultsInitial <- renderTable ({
-        
-        
-        
-        v$resInitial <- function.uniqueResults( "Database - Initial"
-            ,v$dataframe_initialisation
+    output$resultsDQOnlyCol <- renderTable ({
+        v$resDQOnlyCol <- function.loopResultsDQ(
+            v$dataframe_initialisation
+            ,v$matrixBool
             ,v$tabCosts
             ,v$columnSelected
             ,v$df_ranges
             ,input$foldselection
-            ,NULL)
-        
-       
-        
-        
+            ,v$tabColumnToRemove
+            ,FALSE)
     },
     rownames = TRUE,
     striped = TRUE,
     hover = TRUE
     )
     
-    output$boxresInitial <- renderUI({
-        function.boxresTab("Results - Initial Database","resultsInitial")
+    output$boxresDQOnlyCol <- renderUI({
+        function.boxresTab("Results - Removing only Columns (trace 0)","resultsDQOnlyCol")
     })
     
     output$resultsDQ <- renderTable ({
@@ -716,14 +711,16 @@ server <- function(input, output, session) {
                 ,v$columnSelected
                 ,v$df_ranges
                 ,input$foldselection
-                ,v$tabColumnToRemove)
+                ,v$tabColumnToRemove
+                ,TRUE)
     },
+    rownames = TRUE,
     striped = TRUE,
     hover = TRUE
     )
     
     output$boxresDQ <- renderUI({
-        function.boxresTab("Results - Data quality config","resultsDQ")
+        function.boxresTab("Results - Removing Columns and Rows (trace 1)","resultsDQ")
     })
     
     output$resultsFixed <- renderTable ({
@@ -749,20 +746,25 @@ server <- function(input, output, session) {
     
 # Line charts °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
     
-    output$costRes <- function.outputLineChart(v$resultsTab <- rbind(v$resInitial[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")],
-                                                                     v$resDQ[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")],
-                                                                     v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")]
-                                                                     ),
+    output$costRes <- function.outputLineChart(
+        
+        v$resultsTabOC <- rbind(v$resDQOnlyCol[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")],
+                                v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")]
+                                ),
+        
+        v$resultsTab <- rbind(v$resDQ[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")],
+                              v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")]
+                              ),
                                                "Cost (per patient)", "Cost")
     output$boxPlotCost <- function.resLineChart("Cost line chart", "danger", "costRes" )
         
-    output$accRes <- function.outputLineChart(v$resultsTab, "Accuracy (%)", "Pourcentage %")
+    output$accRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Accuracy (%)", "Pourcentage %")
     output$boxPlotAccuracy <- function.resLineChart("Accuracy line chart", "info", "accRes")
     
-    output$sensRes <- function.outputLineChart(v$resultsTab, "Sensitivity (%)", "Pourcentage %")
+    output$sensRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Sensitivity (%)", "Pourcentage %")
     output$boxPlotSensitivity <- function.resLineChart("Sensitivity line chart", "info", "sensRes")
         
-    output$speRes <- function.outputLineChart(v$resultsTab, "Specificity (%)", "Pourcentage %")
+    output$speRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Specificity (%)", "Pourcentage %")
     output$boxPlotSpecificity <- function.resLineChart("Specificity line chart", "info", "speRes")
         
 }

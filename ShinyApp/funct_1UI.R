@@ -51,8 +51,7 @@ function.body <- function(){
                         column(6, uiOutput("uploadbutton")),
                         column(6, uiOutput("demobutton"))
                       ),
-                      uiOutput("split"),
-                      tags$br()
+                      uiOutput("split")
                   )
                 ),
                 uiOutput("fromLoadToNextTab")
@@ -415,7 +414,8 @@ function.body <- function(){
           uiOutput("boxPlotSensitivity"),
           uiOutput("boxPlotSpecificity"),
           tags$br(),
-          uiOutput("boxresInitial"),
+          # uiOutput("boxresInitial"),
+          uiOutput("boxresDQOnlyCol"),
           uiOutput("boxresDQ"),
           uiOutput("boxresFixed")
           

@@ -36,10 +36,10 @@ function.uniqueResults <- function(name, df, tabCosts, target, ranges, fold, cos
     
     tabRes <- data.frame()
     row <- name
-    
+    incProgress(0.5)
     res <- function.CVNaiveBayes(df,target,tabCosts,fold,ranges)
     div <- nrow(df)
-    incProgress(0.5)
+    
     
     tabRes <- function.tabRes(tabRes, row, 
                               NULL,
@@ -58,20 +58,29 @@ function.uniqueResults <- function(name, df, tabCosts, target, ranges, fold, cos
 
 
 
-function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, tabCol){
+function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, tabCol, removeCol){
   
   withProgress(message = "Progressing ...", detail = "Don't worry :)", value = 0, {
     
     tabRes <- data.frame()
     nomCol <- names(tabCol)
     
-    row <- "Data Quality 0"
+    
     
     # DQ with all columns
     
-    rowRemove <- function.removeConsistency(df,matrix)
-    dfClean <- df[!row.names(df)%in%rowRemove , ]
+    if (removeCol){
+      row <- "Data Quality 0"
+      rowRemove <- function.removeConsistency(df,matrix)
+      dfClean <- df[!row.names(df)%in%rowRemove , ]
+    }
+    else{
+      row <- "DataBase - Initial"
+      dfClean <- df
+    }
     
+    
+    incProgress(0.5)
     res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
     
     div <- nrow(dfClean)
@@ -85,7 +94,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
                               tabCosts,
                               NULL
     )
-  
+    incProgress(0.5)
   })
   
   l <- "DQ"
@@ -96,19 +105,26 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
     
     for (col in nomCol) {
       n <- n + 1
-      incProgress(progress) # Progress bar
       row = paste(l,n)
       
       df <- df[,!names(df)%in%col]
       matrix <- matrix[,!names(matrix)%in%col]
       
-      rowRemove <- function.removeConsistency(df,matrix)
-      dfClean <- df[!row.names(df)%in%rowRemove , ]
+      
+      if (removeCol){
+        rowRemove <- function.removeConsistency(df,matrix)
+        dfClean <- df[!row.names(df)%in%rowRemove , ]
+      }
+      else{
+        dfClean <- df
+      }
+      
+      incProgress(progress/3) # Progress bar
       
       res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
       
       div <- nrow(dfClean)
-      
+      incProgress(progress/3) # Progress bar
       tabRes <- function.tabRes(tabRes, row, 
                                 col,
                                 tabCol[col],
@@ -118,7 +134,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
                                 tabCosts,
                                 NULL
       )
-      
+      incProgress(progress/3) # Progress bar
     }
     
   })
@@ -129,28 +145,27 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
 }
 
 
-
-
-function.outputLineChart <- function(tab,colName,y){
+function.outputLineChart <- function(tabOnlyCol,tabDQ,colName,y){
   renderPlotly({
-    x <- rownames(tab)
-    plot_ly(
-      tab,x = factor(x,levels = x), y = ~tab[,colName], type = "scatter", mode = "lines"
+    x <- rownames(tabDQ)
+    p <- plot_ly(
+      tabDQ,x = factor(x,levels = x), y = ~tabOnlyCol[,colName], type = "scatter", mode = "lines"
     ) %>% 
       layout(xaxis = list(title = "Step"),
              yaxis = list(title = y))
+    p <- add_trace(p,x = factor(x,levels = x), y = ~tabDQ[,colName], mode = "lines")
   })
 }
 
 
-function.resLineChart <- function(title, status, output){
+function.resLineChart <- function(title, status, lineChart){
   
   renderUI({
     box(title = title,
         status = status,
         solidHeader = TRUE,
         width = 6,
-        withSpinner(plotlyOutput(output))
+        withSpinner(plotlyOutput(lineChart))
         
     )
   })
