@@ -4,6 +4,7 @@ function.tabRes <- function(tabRes, row,colRemoved, badValues, nbcol, nbrow, res
   moy <- res$moy
   sens <- res$sensitivity
   spe <- res$specificity
+  auc <- res$auc
   resCost <- res$restab$cost
   costs <- tabCosts$Cost
   
@@ -16,6 +17,7 @@ function.tabRes <- function(tabRes, row,colRemoved, badValues, nbcol, nbrow, res
   tabRes[row,"Accuracy (%)"] <- round(mean(moy), digits = 2)
   tabRes[row,"Sensitivity (%)"] <- round(mean(sens), digits = 2)
   tabRes[row,"Specificity (%)"] <- round(mean(spe), digits = 2)
+  tabRes[row,"AUC (%)"] <- round(mean(auc), digits = 2)
   cost <- round(sum(resCost * costs) * 5 / nbrow, digits = 2)
   tabRes[row,"Cost (per patient)"] <- cost
   
@@ -158,13 +160,13 @@ function.outputLineChart <- function(tabOnlyCol,tabDQ,colName,y){
 }
 
 
-function.resLineChart <- function(title, status, lineChart){
+function.resLineChart <- function(title, status, lineChart, width){
   
   renderUI({
     box(title = title,
         status = status,
         solidHeader = TRUE,
-        width = 6,
+        width = width,
         withSpinner(plotlyOutput(lineChart))
         
     )

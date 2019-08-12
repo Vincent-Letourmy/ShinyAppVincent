@@ -143,11 +143,25 @@ function.body <- function(){
                 solidHeader = TRUE,
                 width = 12,
                 tags$br(),
-                uiOutput("fromDQconfigToLoad"),
+                
+                #uiOutput("fromDQconfigToLoad"),
+                #tags$br(),
+                #uiOutput("fromDQconfigToCreate"),
+                #tags$br(),
+                #uiOutput("fromDQconfigToMissing"),
+                #tags$br()
+                
+                # Option 1 : NO DQ
+                uiOutput("fromDQconfigToNaiveBayes"),
                 tags$br(),
-                uiOutput("fromDQconfigToCreate"),
+                # Option 2 : DQ - Remove Columns with at least one inconsistent value in a loop
+                uiOutput("fromDQconfigToTypesandRanges1"),
                 tags$br(),
-                uiOutput("fromDQconfigToMissing"),
+                # Option 3 : DQ - Remove Columns AND rows 
+                uiOutput("fromDQconfigToTypesandRanges2"),
+                tags$br(),
+                #Option 4 : DQ - Do the two last options and compare them
+                uiOutput("fromDQconfigToTypesandRanges3"),
                 tags$br()
               ),
               tags$br(),
@@ -413,6 +427,7 @@ function.body <- function(){
           uiOutput("boxPlotAccuracy"),
           uiOutput("boxPlotSensitivity"),
           uiOutput("boxPlotSpecificity"),
+          uiOutput("boxPlotAUC"),
           tags$br(),
           # uiOutput("boxresInitial"),
           uiOutput("boxresDQOnlyCol"),

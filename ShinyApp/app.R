@@ -6,6 +6,7 @@ library(dplyr)
 library(plotly) # Plots
 library(rhandsontable) # Edit table
 library(shinycssloaders)
+library(pROC)
 
 source("funct_0downloadFile.R")
 source("funct_1UI.R")
@@ -235,6 +236,15 @@ server <- function(input, output, session) {
     
     
 # °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ config  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+    
+# NO DQ
+    
+    output$fromDQconfigToNaiveBayes <- renderUI({
+        actionButton("fromDQconfigToNaiveBayes","NO DQ")
+    })
+    observeEvent(input$fromDQconfigToNaiveBayes, {
+        updateTabItems(session, "sidebarmenu", "naivebayesconfig")
+    })
     
     
 # Load BUTTON
@@ -666,10 +676,15 @@ server <- function(input, output, session) {
         actionButton("fromCostsToNextButton","Results")
     })
     observeEvent(input$fromCostsToNextButton,{
+        
+        #switch(v$dqChoice, 
+            ### A écrire suivant le choix effectué
+        #)
+        
         #As factor to run naive Bayes
+        
         if (! is.null(v$dataframe_fixing) ) v$dataframe_fixing <- function.as_factor(v$dataframe_fixing)
-        #v$df_types <- v$df_types[,names(v$dataframe_initialisation)]
-        #v$df_ranges <- v$df_ranges[,names(v$dataframe_initialisation)]
+        
         v$matrixBool <- v$matrixBool[,names(v$dataframe_initialisation)]
         
         updateTabItems(session,"sidebarmenu", "results")
@@ -748,24 +763,27 @@ server <- function(input, output, session) {
     
     output$costRes <- function.outputLineChart(
         
-        v$resultsTabOC <- rbind(v$resDQOnlyCol[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")],
-                                v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")]
+        v$resultsTabOC <- rbind(v$resDQOnlyCol[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","AUC (%)","Cost (per patient)")],
+                                v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","AUC (%)","Cost (per patient)")]
                                 ),
         
-        v$resultsTab <- rbind(v$resDQ[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")],
-                              v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","Cost (per patient)")]
+        v$resultsTab <- rbind(v$resDQ[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","AUC (%)","Cost (per patient)")],
+                              v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","AUC (%)","Cost (per patient)")]
                               ),
                                                "Cost (per patient)", "Cost")
-    output$boxPlotCost <- function.resLineChart("Cost line chart", "danger", "costRes" )
+    output$boxPlotCost <- function.resLineChart("Cost line chart", "danger", "costRes",6 )
         
     output$accRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Accuracy (%)", "Pourcentage %")
-    output$boxPlotAccuracy <- function.resLineChart("Accuracy line chart", "info", "accRes")
+    output$boxPlotAccuracy <- function.resLineChart("Accuracy line chart", "info", "accRes",6)
     
     output$sensRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Sensitivity (%)", "Pourcentage %")
-    output$boxPlotSensitivity <- function.resLineChart("Sensitivity line chart", "info", "sensRes")
+    output$boxPlotSensitivity <- function.resLineChart("Sensitivity line chart", "info", "sensRes",4)
         
     output$speRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Specificity (%)", "Pourcentage %")
-    output$boxPlotSpecificity <- function.resLineChart("Specificity line chart", "info", "speRes")
+    output$boxPlotSpecificity <- function.resLineChart("Specificity line chart", "info", "speRes",4)
+    
+    output$aucRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "AUC (%)", "Pourcentage %")
+    output$boxPlotAUC <- function.resLineChart("AUC line chart", "info", "aucRes",4)
         
 }
 

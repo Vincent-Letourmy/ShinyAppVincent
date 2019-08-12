@@ -1,24 +1,77 @@
-library(plotly)
+library(pROC)
 
-p <- plot_ly()
+list <- c(0,0,1,0,1)
+list2 <- c(0,1,1,1,1)
 
-for(i in 1:5){
-  p <- add_trace(p, x = 1:10, y = rnorm(10), mode = "lines")
+list <- ordered(list)
+list2 <- ordered(list2)
+
+auc(list,list2)
+auc(list2,list)
+
+log <- as.logical(list)
+log2 <- as.logical(list2)
+
+log <- ordered(log)
+log2 <- ordered(log2)
+
+a <- auc(log,log2)
+
+
+ot <- c("red","red","blue","blue","red")
+ordered(ot)
+order
+
+oth <- c("b","a")
+ordered(oth)
+
+
+source("ShinyApp/funct_4dataquality.R")
+
+library(shiny)
+
+df <- read.csv("ShinyApp/CSV/risk_factors_cervical_cancer_Original.csv", header = TRUE, sep = ",")
+for (col in names(df )) {
+  column <- as.character(df[,col])
+  df[,col] <-  ifelse(column == "?", "", column)
 }
+df <- function.as_factor(df)
+types <- read.csv("ShinyApp/CSV/TypesDataOriginal.csv", header = TRUE, sep = ";")
+ranges <- read.csv("ShinyApp/CSV/RangesDataOriginal.csv", header = TRUE, sep = ";")
+col <- "Biopsy"
+tab <- function.tabNaiveBayes(df,col)
+source("ShinyApp/funct_5CVNaiveBayes.R")
+res <- function.CVNaiveBayes(df,col,tab,2,ranges)
+res
 
-p
 
-x = c("A","B","C")
-y = c(10,15,12)
-z = c(13,11,14)
 
-tab <- data.frame(x,col = y, row.names = x)
-tab2 <- data.frame(x,col = z, row.names = x)
 
-x <- row.names(tab)
 
-p <- plot_ly(
-  tab,x = factor(x,levels = x), y = ~tab[,"col"], type = "scatter", mode = "lines"
-)
-p <- add_trace(p, x = factor(x,levels = x), y = ~tab2[,"col"], mode = "lines")
-p
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

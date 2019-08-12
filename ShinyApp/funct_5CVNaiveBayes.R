@@ -44,6 +44,7 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
         resultats$sensitivity[i] <- stat$sensitivity*100
         resultats$specificity[i] <- stat$specificity*100
         resultats$moy[i] <- stat$accuracy*100
+        resultats$auc[i] <- auc(ordered(res$Reality),ordered(res$NB_Predictions), quiet = TRUE)*100
         
       }
       else{
