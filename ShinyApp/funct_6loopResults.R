@@ -31,15 +31,17 @@ function.tabRes <- function(tabRes, row,colRemoved, badValues, nbcol, nbrow, res
   
 }
 
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
-function.uniqueResults <- function(name, df, tabCosts, target, ranges, fold, costFixing){
+
+function.uniqueResults <- function(name, df, tabCosts, target, fold, costFixing){
   
   withProgress(message = "Initial DB ...", detail = "Don't worry :)", value = 0, {
     
     tabRes <- data.frame()
     row <- name
     incProgress(0.5)
-    res <- function.CVNaiveBayes(df,target,tabCosts,fold,ranges)
+    res <- function.CVNaiveBayes(df,target,tabCosts,fold)
     div <- nrow(df)
     
     
@@ -58,9 +60,10 @@ function.uniqueResults <- function(name, df, tabCosts, target, ranges, fold, cos
   })
 }
 
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
 
-function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, tabCol, removeCol){
+function.loopResultsDQ <- function(df, matrix , tabCosts, target, fold, tabCol, removeCol){
   
   withProgress(message = "Progressing ...", detail = "Don't worry :)", value = 0, {
     
@@ -83,7 +86,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
     
     
     incProgress(0.5)
-    res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
+    res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold)
     
     div <- nrow(dfClean)
     
@@ -99,9 +102,8 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
     incProgress(0.5)
   })
   
-  l <- "DQ"
+  l <- "-"
   n <- 0
-  row <- paste(l,n)
   progress <- 1/length(nomCol)
   withProgress(message = "Progressing ...", detail = "Don't worry :)", value = 0, {
     
@@ -123,7 +125,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
       
       incProgress(progress/3) # Progress bar
       
-      res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold,ranges)
+      res <- function.CVNaiveBayes(dfClean,target,tabCosts,fold)
       
       div <- nrow(dfClean)
       incProgress(progress/3) # Progress bar
@@ -146,16 +148,19 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, ranges, fold, 
   
 }
 
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+
 
 function.outputLineChart <- function(tabOnlyCol,tabDQ,colName,y){
   renderPlotly({
     x <- rownames(tabDQ)
     p <- plot_ly(
-      tabDQ,x = factor(x,levels = x), y = ~tabOnlyCol[,colName], type = "scatter", mode = "lines"
+      tabDQ,x = factor(x,levels = x), y = ~tabOnlyCol[,colName], type = "scatter", mode = "lines", name = "Col removed"
     ) %>% 
-      layout(xaxis = list(title = "Step"),
+      layout(xaxis = list(title = "Number of columns removed"),
              yaxis = list(title = y))
-    p <- add_trace(p,x = factor(x,levels = x), y = ~tabDQ[,colName], mode = "lines")
+    layout
+    p <- add_trace(p,x = factor(x,levels = x), y = ~tabDQ[,colName], mode = "lines", name = "Col/rows rem.")
   })
 }
 
@@ -184,8 +189,6 @@ function.boxresTab <- function(name, tableName){
       )
   )
 }
-
-
 
 
 

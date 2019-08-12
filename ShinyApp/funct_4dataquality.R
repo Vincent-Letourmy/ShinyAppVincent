@@ -24,7 +24,7 @@ function.matrixBooleanMissingValues <- function(df){
 }
 
 
-### 0/1 file inconsistency BIS
+### 0/1 file inconsistency
 
 function.matrixBooleanConsistency <- function(df,types,ranges){
   
@@ -113,12 +113,7 @@ function.matching <- function(df1, df2, nameFile){
 # °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
 
-
-
-
-
-
-### 0/1 file inconsistency BIS
+### 0/1 file inconsistency BIS - Expemple d'optimisation en R (ici non optimisé par rapport à celui plus haut)
 
 function.matrixBooleanConsistencyBIS <- function(df,types,ranges){
   

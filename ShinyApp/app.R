@@ -14,9 +14,8 @@ source("funct_2reactivevalues.R")
 source("funct_3initStep.R")
 source("funct_4dataquality.R")
 source("funct_5CVNaiveBayes.R")
-source("funct_8fixing.R")
-source("funct_loopResults.R")
-#source("funct_other.R")
+source("funct_6loopResults.R")
+source("funct_7fixing.R")
 
 
 ui <- dashboardPage(title = 'ShinyAppVincent', function.header(), function.sidebar(), function.body(), skin='blue')
@@ -237,16 +236,6 @@ server <- function(input, output, session) {
     
 # °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ config  °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
     
-# NO DQ
-    
-    output$fromDQconfigToNaiveBayes <- renderUI({
-        actionButton("fromDQconfigToNaiveBayes","NO DQ")
-    })
-    observeEvent(input$fromDQconfigToNaiveBayes, {
-        updateTabItems(session, "sidebarmenu", "naivebayesconfig")
-    })
-    
-    
 # Load BUTTON
     
     output$fromDQconfigToLoad <- renderUI({
@@ -256,16 +245,7 @@ server <- function(input, output, session) {
         updateTabItems(session, "sidebarmenu", "loaddqfiles")
     })
     
-    
-# Create BUTTON
-    
-    output$fromDQconfigToCreate <- renderUI({
-        actionButton("fromDQconfigToCreate","CREATE DQ FILES")
-    })
-    observeEvent(input$fromDQconfigToCreate, {
-        updateTabItems(session, "sidebarmenu", "createdqfiles")
-    })
-    
+
     
 # Missing values only BUTTON
     
@@ -677,17 +657,13 @@ server <- function(input, output, session) {
     })
     observeEvent(input$fromCostsToNextButton,{
         
-        #switch(v$dqChoice, 
-            ### A écrire suivant le choix effectué
-        #)
-        
         #As factor to run naive Bayes
-        
         if (! is.null(v$dataframe_fixing) ) v$dataframe_fixing <- function.as_factor(v$dataframe_fixing)
-        
         v$matrixBool <- v$matrixBool[,names(v$dataframe_initialisation)]
         
         updateTabItems(session,"sidebarmenu", "results")
+        
+        
     })
     
     
@@ -704,7 +680,6 @@ server <- function(input, output, session) {
             ,v$matrixBool
             ,v$tabCosts
             ,v$columnSelected
-            ,v$df_ranges
             ,input$foldselection
             ,v$tabColumnToRemove
             ,FALSE)
@@ -715,7 +690,7 @@ server <- function(input, output, session) {
     )
     
     output$boxresDQOnlyCol <- renderUI({
-        function.boxresTab("Results - Removing only Columns (trace 0)","resultsDQOnlyCol")
+        function.boxresTab("Results - Removing only Columns (Blue line)","resultsDQOnlyCol")
     })
     
     output$resultsDQ <- renderTable ({
@@ -724,7 +699,6 @@ server <- function(input, output, session) {
                 ,v$matrixBool
                 ,v$tabCosts
                 ,v$columnSelected
-                ,v$df_ranges
                 ,input$foldselection
                 ,v$tabColumnToRemove
                 ,TRUE)
@@ -735,7 +709,7 @@ server <- function(input, output, session) {
     )
     
     output$boxresDQ <- renderUI({
-        function.boxresTab("Results - Removing Columns and Rows (trace 1)","resultsDQ")
+        function.boxresTab("Results - Removing Columns and Rows (Orange line)","resultsDQ")
     })
     
     output$resultsFixed <- renderTable ({
@@ -744,7 +718,6 @@ server <- function(input, output, session) {
             ,v$dataframe_fixing
             ,v$tabCosts
             ,v$columnSelected
-            ,v$df_ranges
             ,input$foldselection
             ,input$costFixingSelection)
     },
@@ -771,19 +744,19 @@ server <- function(input, output, session) {
                               v$resFixed[,c("Accuracy (%)","Sensitivity (%)","Specificity (%)","AUC (%)","Cost (per patient)")]
                               ),
                                                "Cost (per patient)", "Cost")
-    output$boxPlotCost <- function.resLineChart("Cost line chart", "danger", "costRes",6 )
-        
+    output$boxPlotCost <- function.resLineChart("Cost", "danger", "costRes",12 )
+    
     output$accRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Accuracy (%)", "Pourcentage %")
-    output$boxPlotAccuracy <- function.resLineChart("Accuracy line chart", "info", "accRes",6)
+    output$boxPlotAccuracy <- function.resLineChart("Accuracy", "info", "accRes",6)
     
     output$sensRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Sensitivity (%)", "Pourcentage %")
-    output$boxPlotSensitivity <- function.resLineChart("Sensitivity line chart", "info", "sensRes",4)
+    output$boxPlotSensitivity <- function.resLineChart("Sensitivity", "info", "sensRes",6)
         
     output$speRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "Specificity (%)", "Pourcentage %")
-    output$boxPlotSpecificity <- function.resLineChart("Specificity line chart", "info", "speRes",4)
+    output$boxPlotSpecificity <- function.resLineChart("Specificity", "info", "speRes",6)
     
     output$aucRes <- function.outputLineChart(v$resultsTabOC, v$resultsTab, "AUC (%)", "Pourcentage %")
-    output$boxPlotAUC <- function.resLineChart("AUC line chart", "info", "aucRes",4)
+    output$boxPlotAUC <- function.resLineChart("AUC", "info", "aucRes",6)
         
 }
 

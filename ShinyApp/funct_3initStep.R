@@ -1,6 +1,6 @@
 source("funct_5CVNaiveBayes.R")
 
-#----------------------------------------------------------------------------------------- INITIALISATION
+#-------------------------------------- INITIALISATION
 
 
 # Upload Files CSV
@@ -55,7 +55,7 @@ function_parametersBox <- function(header,sep,quote,collapsed){
 }
 
 
-#----------------------------------------------------------------------------------------- TARGET
+#---------------------------------------- TARGET
 
 # Selection column
 

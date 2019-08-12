@@ -1,9 +1,4 @@
 
-library(e1071)
-library(caret) 
-library(dplyr)
-
-
 # Each column as factor
 
 function.as_factor <- function(df){
@@ -14,14 +9,13 @@ function.as_factor <- function(df){
 }
 
 
-function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
+function.CVNaiveBayes <- function(df,col,tabCosts,fold){
   
   resultats <- list()
   cost <- 0
   resultats$restab <- data.frame(tabCosts[,-3],cost)
   nbRowTabCosts <- nrow(tabCosts)
-  rangesFirst <- ranges[,col][1] # ATTENTION, le premier élément dans ranges pour les booléens doit être FALSE, 0, non ... La négation
-  
+
   withProgress( message = "Naive Bayes prediction ...", value = 0, {
     
     for (i in 1:fold) {
@@ -44,7 +38,7 @@ function.CVNaiveBayes <- function(df,col,tabCosts,fold,ranges){
         resultats$sensitivity[i] <- stat$sensitivity*100
         resultats$specificity[i] <- stat$specificity*100
         resultats$moy[i] <- stat$accuracy*100
-        resultats$auc[i] <- auc(ordered(res$Reality),ordered(res$NB_Predictions), quiet = TRUE)*100
+        resultats$auc[i] <- auc(ordered(Reality),ordered(NB_Predictions), quiet = TRUE)*100
         
       }
       else{

@@ -11,7 +11,6 @@ function.sidebar <- function(){
       menuItem("Data Quality Config", tabName = "DQgeneral", startExpanded = TRUE,
                menuSubItem("DQ config", "dqconfig"),
                menuSubItem("Load DQ Files", "loaddqfiles"),
-               menuSubItem("Create DQ Files","createdqfiles"),
                menuSubItem("Remove columns","removecolumns")
                ),
       menuItem("Naive Bayes Config",tabName = "naivebayesconfig"),
@@ -144,25 +143,12 @@ function.body <- function(){
                 width = 12,
                 tags$br(),
                 
-                #uiOutput("fromDQconfigToLoad"),
-                #tags$br(),
-                #uiOutput("fromDQconfigToCreate"),
-                #tags$br(),
-                #uiOutput("fromDQconfigToMissing"),
-                #tags$br()
-                
-                # Option 1 : NO DQ
-                uiOutput("fromDQconfigToNaiveBayes"),
+                uiOutput("fromDQconfigToLoad"),
                 tags$br(),
-                # Option 2 : DQ - Remove Columns with at least one inconsistent value in a loop
-                uiOutput("fromDQconfigToTypesandRanges1"),
-                tags$br(),
-                # Option 3 : DQ - Remove Columns AND rows 
-                uiOutput("fromDQconfigToTypesandRanges2"),
-                tags$br(),
-                #Option 4 : DQ - Do the two last options and compare them
-                uiOutput("fromDQconfigToTypesandRanges3"),
+                uiOutput("fromDQconfigToMissing"),
                 tags$br()
+                
+                
               ),
               tags$br(),
               box(
@@ -419,7 +405,7 @@ function.body <- function(){
       ),
         
 #_____________________________________________________________ Results ___________________________________________________________________________________________#
-        
+
       tabItem(
         tabName = "results",
         fluidPage(
@@ -429,13 +415,13 @@ function.body <- function(){
           uiOutput("boxPlotSpecificity"),
           uiOutput("boxPlotAUC"),
           tags$br(),
-          # uiOutput("boxresInitial"),
           uiOutput("boxresDQOnlyCol"),
           uiOutput("boxresDQ"),
           uiOutput("boxresFixed")
           
         )
       )
+      
     )
   )
 }
