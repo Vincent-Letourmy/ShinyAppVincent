@@ -25,10 +25,10 @@ We will have these results in line charts, with two lines according to the two c
 
 
 ### Step 1: 
-Select the good parameters and upload your database. You can define what is a missing value in your data from 3 choices: “?”, “NA” or “ “. Optional: If you have the same database but with no missing or inconsistent values to compare themselves, you can upload it.
+Select the good parameters and upload your database (CSV only). You can define what is a missing value in your data from 3 choices: “?”, “NA” or “ “. Optional: If you have the same database but with no missing or inconsistent values to compare themselves, you can upload it (CSV only).
 
 ### Step 2: 
-Select your data quality configuration. You have two choices: upload the types and ranges files (information about them are given on the program) to detect missing and inconsistent values, or just detect missing values. If you choose the first option, you upload them.
+Select your data quality configuration. You have two choices: upload the types and ranges files (information about them are given on the program) to detect missing and inconsistent values, or just detect missing values. If you choose the first option, you upload them (CSV only).
 
 ### Step 3: 
 Now missing (and inconsistent) values are detected, you can see selected all the columns where there are present. If you do nothing, all the selection will be removed, one by one, to create as many configurations as there are columns, two times, one with removing rows, one without.
