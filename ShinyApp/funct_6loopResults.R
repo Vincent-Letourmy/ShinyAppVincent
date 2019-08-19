@@ -109,7 +109,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, fold, tabCol, 
     
     for (col in nomCol) {
       n <- n + 1
-      row = paste(l,n)
+      row = paste(n)
       
       df <- df[,!names(df)%in%col]
       matrix <- matrix[,!names(matrix)%in%col]
