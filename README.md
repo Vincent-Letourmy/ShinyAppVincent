@@ -4,7 +4,7 @@ This present guide will help you:
 - Second, how to use it
 - and Third, to undersand the structure of the code.
 
-## I. Objective
+# I. Objective
 
 The goal of the code is to allow the user to create **different configurations** of a unique database according to missing or inconsistent values, with the aim of **testing** them on a prediction algorithm.
 
@@ -25,7 +25,7 @@ The difference is the number of data we will keep: in the first one, we keep all
 
 We will have these results in line charts, with two lines according to the two cases of removing missing values (columns only or columns and rows).
 
-## II. How to use it
+# II. How to use it
 
 
 ### Step 1: 
@@ -48,7 +48,7 @@ Results. You have five line charts and two tabs, corresponding to the results of
 
 
 
-## III. Structure of  the code
+# III. Structure of  the code
 
 The code is speared in ten files:
 
