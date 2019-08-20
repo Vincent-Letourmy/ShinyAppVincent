@@ -46,7 +46,7 @@ Select the cost of failing of the prediction. The cost of an error could be not 
 ### Step 6: 
 Results. You have five line charts and two tabs, corresponding to the results of cost, accuracy, sensitivity, specificity and AUC for each configuration of the database.
 
-<![endif]-->
+
 
 ## III. Structure of  the code
 
