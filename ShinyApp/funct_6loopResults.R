@@ -76,7 +76,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, fold, tabCol, 
     
     if (removeCol){
       row <- "Data Quality 0"
-      rowRemove <- function.removeConsistency(df,matrix)
+      rowRemove <- function.removeConsistency(matrix)
       dfClean <- df[!row.names(df)%in%rowRemove , ]
     }
     else{
@@ -116,7 +116,7 @@ function.loopResultsDQ <- function(df, matrix , tabCosts, target, fold, tabCol, 
       
       
       if (removeCol){
-        rowRemove <- function.removeConsistency(df,matrix)
+        rowRemove <- function.removeConsistency(matrix)
         dfClean <- df[!row.names(df)%in%rowRemove , ]
       }
       else{
@@ -155,12 +155,14 @@ function.outputLineChart <- function(tabOnlyCol,tabDQ,colName,y){
   renderPlotly({
     x <- rownames(tabDQ)
     p <- plot_ly(
-      tabDQ,x = factor(x,levels = x), y = ~tabOnlyCol[,colName], type = "scatter", mode = "lines", name = "Col removed"
+      tabDQ,x = factor(x,levels = x), y = ~tabOnlyCol[,colName], 
+      type = "scatter", mode = "lines", name = "Col removed"
     ) %>% 
       layout(xaxis = list(title = "Number of columns removed"),
              yaxis = list(title = y))
     layout
-    p <- add_trace(p,x = factor(x,levels = x), y = ~tabDQ[,colName], mode = "lines", name = "Col/rows rem.")
+    p <- add_trace(p,x = factor(x,levels = x), y = ~tabDQ[,colName], 
+                   mode = "lines", name = "Col/rows rem.")
   })
 }
 

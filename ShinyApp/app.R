@@ -1,10 +1,13 @@
+
+# app.R
+
 library(shiny)
 require(shinydashboard)
-library(e1071) # Naive Bayes
+library(e1071) 
 library(caret) 
 library(dplyr)
-library(plotly) # Plots
-library(rhandsontable) # Edit table
+library(plotly) 
+library(rhandsontable) 
 library(shinycssloaders)
 library(pROC)
 
@@ -67,7 +70,9 @@ server <- function(input, output, session) {
     })
     
     output$split <- renderUI({
-        numericInput("split","Split the table ? (%)", value = 100,min = 0,max = 100, step = 1)
+        numericInput("split","Split the table ? (%)", 
+                     value = 100,min = 0,max = 100, 
+                     step = 1)
         
     })
     
@@ -442,11 +447,17 @@ server <- function(input, output, session) {
         
         if (colTotal - colRemoved < 2) {
             v$tooMuchColRemoved <- TRUE
-            valueBox(value = value, subtitle = paste("Too much columns removed"), icon = icon("thumbs-down",lib='font-awesome'), color = "red")
+            valueBox(value = value, 
+                     subtitle = paste("Too much columns removed"), 
+                     icon = icon("thumbs-down",lib='font-awesome'), 
+                     color = "red")
         }
         else {
             v$tooMuchColRemoved <- FALSE
-            valueBox(value = value, subtitle = paste("Columns which will be removed"), icon = icon("thumbs-up",lib='font-awesome'), color = "green")
+            valueBox(value = value, 
+                     subtitle = paste("Columns which will be removed"), 
+                     icon = icon("thumbs-up",lib='font-awesome'), 
+                     color = "green")
         }
     })
     
@@ -562,7 +573,9 @@ server <- function(input, output, session) {
         
         v$dataframe_withoutcolselected <- v$dataframe_initialisation[,!names(v$dataframe_initialisation)%in%v$columnSelected]
         newList <- rev(names(v$dataframe_withoutcolselected))
-        checkboxGroupInput("targets",label = "Select target(s)", choices = newList)
+        checkboxGroupInput("targets",
+                           label = "Select target(s)",
+                           choices = newList)
     })
     
     

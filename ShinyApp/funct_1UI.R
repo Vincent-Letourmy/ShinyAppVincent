@@ -249,22 +249,26 @@ function.body <- function(){
         )
       ),
 
-# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° DQ Create Files °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
+# °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° EMPTY °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°#
 
       tabItem(
-        tabName = "createdqfiles",
+        tabName = "selon le tabName dans sidebar",
         
         sidebarLayout(
           
           sidebarPanel(
             
-            uiOutput("fromCreateToNext")
+            fluidPage(
+              # CODE ICI (PRINCIPALEMENT LES INPUTS)
+            )
             
           ),
           
           mainPanel(
             
-            
+            fluidPage(
+              # CODE ICI (PRINCIPALEMENT LES TABLEAUX ET GRAPHIQUES)
+            )
             
           )
         )

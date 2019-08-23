@@ -77,7 +77,7 @@ function.matrixBooleanConsistency <- function(df,types,ranges){
 
 # °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
-function.removeConsistency <- function(df, a){
+function.removeConsistency <- function(a){
   rem <- 0
   for (row in row.names(a)) {
     ligne <- as.numeric(a[row,])
@@ -96,16 +96,28 @@ function.matching <- function(df1, df2, nameFile){
   nbCol <- ncol(df1)
   
   if ( is.null(df2) ) {
-    valueBox(value = nameFile, subtitle = paste("Please upload",nameFile, "file"), icon = icon("question",lib='font-awesome'), color = "yellow")
+    valueBox(value = nameFile, 
+             subtitle = paste("Please upload",nameFile, "file"), 
+             icon = icon("question",lib='font-awesome'), 
+             color = "yellow")
   }
   else if ( nbCol != ncol(df2) ) {
-    valueBox(value = paste(nameFile," not match"), subtitle = "Number of columns doesn't match", icon = icon("thumbs-down",lib='font-awesome'), color = "red")
+    valueBox(value = paste(nameFile," not match"), 
+             subtitle = "Number of columns doesn't match", 
+             icon = icon("thumbs-down",lib='font-awesome'), 
+             color = "red")
   }
   else if ( length(union(names(df1),names(df2))) != nbCol){
-      valueBox(value = paste(nameFile," not match"), subtitle = "Column names don't match", icon = icon("thumbs-down",lib='font-awesome'), color = "red")
+      valueBox(value = paste(nameFile," not match"), 
+               subtitle = "Column names don't match", 
+               icon = icon("thumbs-down",lib='font-awesome'), 
+               color = "red")
   }
   else 
-    valueBox(value = paste(nameFile," match"), subtitle = "Number and names of columns match", icon = icon("thumbs-up",lib='font-awesome'), color = "green")
+    valueBox(value = paste(nameFile," match"), 
+             subtitle = "Number and names of columns match", 
+             icon = icon("thumbs-up",lib='font-awesome'), 
+             color = "green")
     
 }
 

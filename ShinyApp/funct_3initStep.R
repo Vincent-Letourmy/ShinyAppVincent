@@ -26,7 +26,6 @@ function.loadFile <- function(file, header, sep, quote){
 # Parameters box
 
 function_parametersBox <- function(header,sep,quote,collapsed){
-  
   renderUI({
     box(width = 12,
         title = "Parameters (CSV)",
@@ -51,7 +50,6 @@ function_parametersBox <- function(header,sep,quote,collapsed){
         )
     )
   })
-  
 }
 
 
