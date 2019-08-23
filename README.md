@@ -1,4 +1,6 @@
 # Guide
+> Link of the website : https://letourmyvincent-r.shinyapps.io/ShinyApp/ 
+
 This present guide will help you:
 - First, to know the aim of the program 
 - Second, how to use it
