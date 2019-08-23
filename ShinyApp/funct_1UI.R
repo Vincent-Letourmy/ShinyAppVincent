@@ -49,8 +49,8 @@ function.body <- function(){
                       fluidRow(
                         column(6, uiOutput("uploadbutton")),
                         column(6, uiOutput("demobutton"))
-                      ),
-                      uiOutput("split")
+                      )
+                      #uiOutput("split")
                   )
                 ),
                 uiOutput("fromLoadToNextTab")

@@ -69,12 +69,12 @@ server <- function(input, output, session) {
         v$dataframe_initialisationBis <- v$dataframe_initialisation <- function.loadFile("CSV/risk_factors_cervical_cancer_Original.csv", input$header ,"," , input$quote)
     })
     
-    output$split <- renderUI({
-        numericInput("split","Split the table ? (%)", 
-                     value = 100,min = 0,max = 100, 
-                     step = 1)
+    #output$split <- renderUI({
+        #numericInput("split","Split the table ? (%)", 
+         #            value = 100,min = 0,max = 100, 
+         #            step = 1)
         
-    })
+    #})
     
     
     ### Next tab button
@@ -85,9 +85,9 @@ server <- function(input, output, session) {
     })
     observeEvent(input$fromLoadToNextTab, {
         
-        training.samples <- v$dataframe_initialisation[,1] %>% 
-            caret::createDataPartition(p = input$split/100, list = FALSE)
-        v$dataframe_initialisationBis <- v$dataframe_initialisation <- v$dataframe_initialisation[training.samples, ]
+        #training.samples <- v$dataframe_initialisation %>%
+            #caret::createDataPartition(p = input$split/100, list = FALSE)
+        #v$dataframe_initialisationBis <- v$dataframe_initialisation <- v$dataframe_initialisation[c(training.samples), ]
         
         updateTabsetPanel(session, "tabsetInitialisation", "defineNas")
     })
